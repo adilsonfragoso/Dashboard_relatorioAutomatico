@@ -439,6 +439,15 @@ def obter_status_monitor_andamento():
         # Se data_hora for string, converter para datetime
         if isinstance(ultima_atualizacao, str):
             ultima_atualizacao = datetime.strptime(ultima_atualizacao, '%Y-%m-%d %H:%M:%S')
+        
+        # Garantir que ambos os datetime tenham timezone info
+        # Se ultima_atualizacao não tem timezone, assumir que é local
+        if ultima_atualizacao.tzinfo is None:
+            ultima_atualizacao = ultima_atualizacao.replace(tzinfo=agora.astimezone().tzinfo)
+        
+        # Se agora não tem timezone, adicionar timezone local
+        if agora.tzinfo is None:
+            agora = agora.replace(tzinfo=ultima_atualizacao.tzinfo)
 
         diferenca = agora - ultima_atualizacao
         minutos_desde_ultima = diferenca.total_seconds() / 60
@@ -446,8 +455,8 @@ def obter_status_monitor_andamento():
         # Servidor ativo se última atualização foi há 5 minutos ou menos
         ativo = minutos_desde_ultima <= 5
 
-        # Log para debug
-        logger.info(f"Status MonitorAndamento - Agora: {agora}, Última: {ultima_atualizacao}, Diferença: {minutos_desde_ultima:.1f} min, Ativo: {ativo}")
+        # Log para debug com timezone info
+        logger.info(f"Status MonitorAndamento - Agora: {agora} (tz: {agora.tzinfo}), Última: {ultima_atualizacao} (tz: {ultima_atualizacao.tzinfo}), Diferença: {minutos_desde_ultima:.1f} min, Ativo: {ativo}")
 
         # Log adicional para debug
         logger.info(f"Status final - Ativo: {ativo}, Minutos: {minutos_desde_ultima:.1f}")
