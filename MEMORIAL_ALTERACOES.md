@@ -98,6 +98,43 @@ Este projeto visa criar um sistema completo com:
 - ✅ **Novo design:** Ícones baseados no design fornecido pelo usuário (pdfdown.png)
 - ✅ **Arquitetura separada:** Dashboard apenas verifica PDFs na pasta downloads (não gera automaticamente)
 
+### **🐛 Correção de Problema no Status do Dashboard (2025-08-02):**
+
+#### **Problema Identificado:**
+- ❌ Dashboard mostrava "Servidor Parado" mesmo com dados atualizados
+- ❌ Erro `UnboundLocalError: cannot access local variable 'ativo' where it is not associated with a value`
+- ❌ Nomenclatura "Heroku" não era mais apropriada
+
+#### **Solução Aplicada:**
+- ✅ **Variável `ativo` inicializada:** `ativo = False` no início da função para prevenir erro
+- ✅ **Endpoint renomeado:** `/api/dashboard/status-heroku` → `/api/dashboard/status-monitor-andamento`
+- ✅ **Função renomeada:** `obter_status_heroku()` → `obter_status_monitor_andamento()`
+- ✅ **JavaScript atualizado:** Todas as funções renomeadas de "Heroku" para "monitorAndamento"
+- ✅ **Logs atualizados:** Prefixos `[HEROKU]` → `[MONITOR]` para melhor identificação
+- ✅ **Cache-busting:** Versões CSS e JS atualizadas para forçar recarregamento
+
+#### **Mudanças Técnicas:**
+```python
+# main.py - Função corrigida
+@app.get("/api/dashboard/status-monitor-andamento")
+def obter_status_monitor_andamento():
+    ativo = False  # Initialize ativo to prevent potential UnboundLocalError
+    # ... resto da função
+```
+
+```javascript
+// dashboard.js - Funções renomeadas
+async function verificarStatusMonitorAndamento() {
+    const response = await fetch('/api/dashboard/status-monitor-andamento?t=' + Date.now());
+    // ... resto da função
+}
+```
+
+#### **Teste de Funcionamento:**
+- ✅ **Endpoint testado:** Retorna `ativo: True` quando servidor está ativo
+- ✅ **Dashboard atualizado:** Status agora respeita a diferença de tempo corretamente
+- ✅ **Logs funcionando:** Console mostra informações detalhadas do status
+
 ## 📚 **Documentação Criada**
 
 ### **dados_webhook.md**

@@ -130,7 +130,7 @@ def obter_extracoes_recentes():
                             minuto = int(horario_parts[1]) if len(horario_parts) > 1 else 0
                             
                         fechamento = data_obj.replace(hour=hora, minute=minuto, second=0)
-                        limite_exibicao = fechamento + timedelta(minutes=60)
+                        limite_exibicao = fechamento + timedelta(minutes=860)
                         extracao['deve_exibir'] = agora <= limite_exibicao
                     except Exception as e:
                         print(f"Erro ao processar horário para edição {extracao['edicao'] if extracao and 'edicao' in extracao else ''}: {e}")
@@ -401,16 +401,17 @@ def download_pdf(edicao: int):
         logger.error(f"Erro ao fazer download do PDF: {e}")
         raise HTTPException(status_code=500, detail=f"Erro interno: {str(e)}")
 
-@app.get("/api/dashboard/status-heroku")
-def obter_status_heroku():
+@app.get("/api/dashboard/status-monitor-andamento")
+def obter_status_monitor_andamento():
     """
-    Obtém status do servidor Heroku baseado na tabela logs_andamento
+    Obtém status do servidor de monitoramento de andamento baseado na tabela logs_andamento
     """
+    ativo = False  # Initialize ativo to prevent potential UnboundLocalError
     try:
         connection = pymysql.connect(**DB_CONFIG)
         cursor = connection.cursor(DictCursor)
 
-        # Buscar último log de sucesso da Heroku
+        # Buscar último log de sucesso
         cursor.execute("""
             SELECT data_hora, log_status
             FROM logs_andamento
@@ -442,12 +443,12 @@ def obter_status_heroku():
         diferenca = agora - ultima_atualizacao
         minutos_desde_ultima = diferenca.total_seconds() / 60
 
-        # Log para debug
-        logger.info(f"Status Heroku - Agora: {agora}, Última: {ultima_atualizacao}, Diferença: {minutos_desde_ultima:.1f} min, Ativo: {ativo}")
-
         # Servidor ativo se última atualização foi há 5 minutos ou menos
         ativo = minutos_desde_ultima <= 5
-        
+
+        # Log para debug
+        logger.info(f"Status MonitorAndamento - Agora: {agora}, Última: {ultima_atualizacao}, Diferença: {minutos_desde_ultima:.1f} min, Ativo: {ativo}")
+
         # Log adicional para debug
         logger.info(f"Status final - Ativo: {ativo}, Minutos: {minutos_desde_ultima:.1f}")
 
@@ -460,7 +461,7 @@ def obter_status_heroku():
         }
 
     except Exception as e:
-        logger.error(f"Erro ao obter status da Heroku: {e}")
+        logger.error(f"Erro ao obter status do MonitorAndamento: {e}")
         return {
             "ativo": False,
             "motivo": f"Erro: {str(e)}",

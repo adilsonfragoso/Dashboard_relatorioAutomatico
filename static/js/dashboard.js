@@ -10,16 +10,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar rodapé
     atualizarStatusRodape('sincronizando', 'Carregando dados iniciais...');
     
-    // Verificar status da Heroku inicialmente
+    // Verificar status do monitorAndamento inicialmente
     console.log('[INIT] 🚀 Inicializando dashboard...');
     setTimeout(() => {
         console.log('[INIT] ⏰ Executando verificação inicial do status...');
-        verificarStatusHeroku();
+        verificarStatusMonitorAndamento();
         
         // Teste adicional após 3 segundos
         setTimeout(() => {
             console.log('[TEST] 🔧 Teste adicional do status...');
-            verificarStatusHeroku();
+            verificarStatusMonitorAndamento();
         }, 3000);
     }, 1000); // Aguardar 1 segundo para garantir que a página carregou
 
@@ -51,9 +51,9 @@ function iniciarAtualizacaoAutomatica() {
         verificarSeHouveMudancas();
     }, 15000); // 15 segundos - mais frequente para detectar mudanças
 
-    // Verificação do status da Heroku a cada 30 segundos
+    // Verificação do status do monitorAndamento a cada 30 segundos
     setInterval(() => {
-        verificarStatusHeroku();
+        verificarStatusMonitorAndamento();
     }, 30000); // 30 segundos
 
     // Atualização completa a cada 1 minuto (fallback)
@@ -108,51 +108,51 @@ async function verificarSeHouveMudancas() {
 // FUNÇÃO DE TESTE TEMPORÁRIA
 function testarStatus() {
     console.log('[TEST] 🔧 Teste manual do status iniciado...');
-    verificarStatusHeroku();
+    verificarStatusMonitorAndamento();
 }
 
 // NOVA FUNÇÃO: Verificar status da Heroku baseado na tabela logs_andamento
-async function verificarStatusHeroku() {
+async function verificarStatusMonitorAndamento() {
     try {
-        console.log('[HEROKU] 🔍 Verificando status do servidor...');
-        const response = await fetch('/api/dashboard/status-heroku?t=' + Date.now());
+        console.log('[MONITOR] 🔍 Verificando status do servidor...');
+        const response = await fetch('/api/dashboard/status-monitor-andamento?t=' + Date.now());
         
         if (!response.ok) {
-            console.log('[HEROKU] ❌ Erro ao verificar status:', response.status);
+            console.log('[MONITOR] ❌ Erro ao verificar status:', response.status);
             atualizarIndicadorServidor('offline', 'Erro ao verificar status');
             return;
         }
 
         const data = await response.json();
-        console.log('[HEROKU] 📊 Dados recebidos:', data);
+        console.log('[MONITOR] 📊 Dados recebidos:', data);
 
         if (data.ativo) {
-            console.log(`[HEROKU] ✅ Status: Ativo (${data.minutos_desde_ultima} min atrás)`);
+            console.log(`[MONITOR] ✅ Status: Ativo (${data.minutos_desde_ultima} min atrás)`);
             atualizarIndicadorServidor('online', `Última atualização: ${data.ultima_atualizacao_formatada}`);
-            atualizarUltimaAtualizacaoHeroku(data.ultima_atualizacao_formatada);
+            atualizarUltimaAtualizacaoMonitorAndamento(data.ultima_atualizacao_formatada);
         } else {
-            console.log(`[HEROKU] ❌ Status: Inativo (${data.minutos_desde_ultima || 'N/A'} min atrás)`);
+            console.log(`[MONITOR] ❌ Status: Inativo (${data.minutos_desde_ultima || 'N/A'} min atrás)`);
             atualizarIndicadorServidor('offline', data.motivo || 'Sem atualizações recentes');
             if (data.ultima_atualizacao_formatada) {
-                atualizarUltimaAtualizacaoHeroku(data.ultima_atualizacao_formatada);
+                atualizarUltimaAtualizacaoMonitorAndamento(data.ultima_atualizacao_formatada);
             }
         }
     } catch (error) {
-        console.log('[HEROKU] ⚠️ Erro ao verificar status:', error);
+        console.log('[MONITOR] ⚠️ Erro ao verificar status:', error);
         atualizarIndicadorServidor('offline', 'Erro de conexão');
     }
 }
 
 // NOVA FUNÇÃO: Atualizar indicador visual do servidor
 function atualizarIndicadorServidor(status, mensagem) {
-    console.log(`[HEROKU] 🎨 Atualizando indicador para: ${status} - ${mensagem}`);
+    console.log(`[MONITOR] 🎨 Atualizando indicador para: ${status} - ${mensagem}`);
     
     const indicator = document.getElementById('status-agendador');
     const dot = indicator.querySelector('.status-dot');
     const text = indicator.querySelector('.status-text');
 
     if (!indicator || !dot || !text) {
-        console.log('[HEROKU] ⚠️ Elementos do indicador não encontrados');
+        console.log('[MONITOR] ⚠️ Elementos do indicador não encontrados');
         return;
     }
 
@@ -165,24 +165,24 @@ function atualizarIndicadorServidor(status, mensagem) {
         indicator.classList.add('online');
         text.textContent = 'Servidor Ativo';
         indicator.title = mensagem;
-        console.log('[HEROKU] ✅ Indicador atualizado para ONLINE');
+        console.log('[MONITOR] ✅ Indicador atualizado para ONLINE');
     } else {
         dot.classList.add('status-offline');
         indicator.classList.add('offline');
         text.textContent = 'Servidor Parado';
         indicator.title = mensagem;
-        console.log('[HEROKU] ❌ Indicador atualizado para OFFLINE');
+        console.log('[MONITOR] ❌ Indicador atualizado para OFFLINE');
     }
 }
 
-// NOVA FUNÇÃO: Atualizar última atualização com dados da Heroku
-function atualizarUltimaAtualizacaoHeroku(horaFormatada) {
+// NOVA FUNÇÃO: Atualizar última atualização com dados do monitorAndamento
+function atualizarUltimaAtualizacaoMonitorAndamento(horaFormatada) {
     const elementoUltimaAtualizacao = document.getElementById('texto-ultima-atualizacao');
     if (elementoUltimaAtualizacao && horaFormatada) {
         elementoUltimaAtualizacao.textContent = `Última atualização: ${horaFormatada}`;
-        console.log(`[HEROKU] Horário atualizado: ${horaFormatada}`);
+        console.log(`[MONITOR] Horário atualizado: ${horaFormatada}`);
     } else {
-        console.log('[HEROKU] ⚠️ Elemento texto-ultima-atualizacao não encontrado');
+        console.log('[MONITOR] ⚠️ Elemento texto-ultima-atualizacao não encontrado');
     }
 }
 
