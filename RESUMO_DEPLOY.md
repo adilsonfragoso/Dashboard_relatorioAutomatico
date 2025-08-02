@@ -26,7 +26,7 @@ LOGIN_PASSWORD=sua_senha
 
 # Paths Docker
 DOWNLOAD_PATH=/app/downloads
-WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf
+WKHTMLTOPDF_PATH=/usr/bin/wkhtmltopdf
 
 # Webhook (opcional)
 WEBHOOK_SECRET=seu_secret_aqui

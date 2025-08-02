@@ -104,7 +104,7 @@ LOGIN_CONFIG = {
 CAMINHO_DOWNLOADS = os.getenv('DOWNLOAD_PATH', os.path.join(os.getcwd(), "downloads"))
 CAMINHO_LOGS = "/app/logs"
 # Caminho do wkhtmltopdf - adaptável para local e Docker
-CAMINHO_WKHTMLTOPDF = os.getenv('WKHTMLTOPDF_PATH', r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe")
+CAMINHO_WKHTMLTOPDF = os.getenv('WKHTMLTOPDF_PATH', "/usr/bin/wkhtmltopdf")
 
 # Criar diretórios se não existirem
 os.makedirs(CAMINHO_DOWNLOADS, exist_ok=True)

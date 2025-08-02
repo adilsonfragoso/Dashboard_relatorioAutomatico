@@ -18,7 +18,7 @@ LOGIN_PASSWORD=sua_senha
 
 # Configurações de Paths (Docker)
 DOWNLOAD_PATH=/app/downloads
-WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf
+WKHTMLTOPDF_PATH=/usr/bin/wkhtmltopdf
 
 # Webhook Secret (opcional)
 WEBHOOK_SECRET=seu_secret_aqui
@@ -85,7 +85,7 @@ DB_CHARSET=utf8mb4
 LOGIN_EMAIL=seu_email@exemplo.com
 LOGIN_PASSWORD=sua_senha
 DOWNLOAD_PATH=/app/downloads
-WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf
+WKHTMLTOPDF_PATH=/usr/bin/wkhtmltopdf
 WEBHOOK_SECRET=seu_secret_aqui
 ```
 
@@ -146,6 +146,7 @@ ls /app/downloads/
 4. **Logs:** Monitorar logs para identificar problemas
 5. **Webhook:** Atualizar URL no script externo após deploy
 6. **⚠️ Variáveis de Ambiente:** Configurar na interface web do Coolify, NÃO no docker-compose.yml
+7. **🐳 Docker:** wkhtmltopdf instalado via apt-get (mais confiável)
 
 ## 🔄 **Atualização do Script Externo**
 

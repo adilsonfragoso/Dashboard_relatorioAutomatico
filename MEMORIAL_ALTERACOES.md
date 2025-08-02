@@ -178,7 +178,7 @@ Este projeto visa criar um sistema completo com:
 - DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_CHARSET
 - LOGIN_EMAIL, LOGIN_PASSWORD (para relatorio_v2_vps.py)
 - DOWNLOAD_PATH=/app/downloads
-- WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf
+- WKHTMLTOPDF_PATH=/usr/bin/wkhtmltopdf
 - WEBHOOK_SECRET (opcional)
 
 ### **✅ Documentação Atualizada:**
@@ -191,6 +191,29 @@ Este projeto visa criar um sistema completo com:
 - Volumes: downloads/ e logs/ compartilhados
 - Logs configurados para identificação de problemas
 - Paths adaptados para ambiente Docker
+
+### **🐛 Correção de Problema no Deploy (2025-08-02):**
+
+#### **Problema Identificado:**
+- ❌ Erro na instalação do wkhtmltopdf no Docker
+- ❌ Link do GitHub quebrado: `wkhtmltox_0.12.6.1-2.bullseye_amd64.deb`
+- ❌ Falha no build do Docker
+
+#### **Solução Aplicada:**
+- ✅ **Dockerfile corrigido:** Instalação via `apt-get install wkhtmltopdf`
+- ✅ **Caminho atualizado:** `/usr/bin/wkhtmltopdf` (padrão do apt)
+- ✅ **Variáveis de ambiente:** Atualizadas em todos os arquivos
+- ✅ **Documentação:** COOLIFY_DEPLOY.md e RESUMO_DEPLOY.md atualizados
+
+#### **Mudanças Técnicas:**
+```dockerfile
+# Antes (problemático):
+RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.bullseye_amd64.deb \
+    && dpkg -i wkhtmltox_0.12.6.1-2.bullseye_amd64.deb
+
+# Depois (corrigido):
+RUN apt-get install -y wkhtmltopdf
+```
 
 ### **📋 Próximos Passos:**
 1. Deploy no Coolify seguindo COOLIFY_DEPLOY.md
