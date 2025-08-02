@@ -1,0 +1,40 @@
+{
+  "name": "dashboard-gerenciamento-rifas",
+  "description": "Dashboard isolada para gerenciamento de rifas",
+  "version": "1.0.0",
+  "type": "docker-compose",
+  "port": 8001,
+  "environment": {
+    "DB_HOST": "required",
+    "DB_USER": "required", 
+    "DB_PASSWORD": "required",
+    "DB_NAME": "required",
+    "DB_CHARSET": "optional"
+  },
+  "volumes": [
+    {
+      "source": "./scripts",
+      "target": "/app/scripts",
+      "description": "Scripts externos para envio de WhatsApp e geração de relatórios"
+    },
+    {
+      "source": "./downloads", 
+      "target": "/app/downloads",
+      "description": "Pasta para armazenar PDFs gerados"
+    }
+  ],
+  "healthcheck": {
+    "path": "/",
+    "interval": "30s",
+    "timeout": "10s",
+    "retries": 3
+  },
+  "resources": {
+    "memory": "512M",
+    "cpu": "0.5"
+  },
+  "deployment": {
+    "strategy": "rolling",
+    "replicas": 1
+  }
+} 

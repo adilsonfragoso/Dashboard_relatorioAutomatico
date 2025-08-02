@@ -1,0 +1,43 @@
+# Arquivos de desenvolvimento
+.env
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Logs
+logs/
+*.log
+
+# Downloads (serão montados como volume)
+downloads/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Documentação
+README.md
+*.md
+!requirements.txt
+
+# Arquivos temporários
+*.tmp
+*.temp 

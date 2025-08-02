@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema de Gerenciamento</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header Compacto -->
+        <div class="dashboard-header">
+            <div class="header-content">
+                <div class="left-section">
+                    <h1 class="dashboard-title">Gerenciamento de Rifas</h1>
+                    <div class="dashboard-date" id="status-sistema">Sistema Ativo</div>
+                </div>
+               <div></div>  
+                <!-- Menu removido para página solo frontend -->
+                <div></div>
+            </div>
+        </div>
+
+        <!-- Conteúdo -->
+        <div class="dashboard-content">
+            <div id="error" class="message error-message"></div>
+
+            <!-- Data das rifas -->
+            <div id="data-rifas" class="data-display" style="display: none;">
+                <!-- Data será inserida aqui via JavaScript -->
+            </div>
+
+            <table class="rifas-table" id="rifas-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Edição</th>
+                        <th>Status</th>
+                        <th>PDF</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Dados serão inseridos aqui via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Rodapé com histórico de atualizações -->
+        <div class="dashboard-footer">
+            <div class="footer-content">
+                <div class="status-container">
+                    <div class="status-indicator" id="status-agendador" title="Status do Agendador">
+                        <span class="status-dot status-checking"></span>
+                        <span class="status-text">Verificando...</span>
+                    </div>
+                    <div class="status-atualizacao status-atualizado" id="status-atualizacao">
+                        <span>✅</span>
+                        <span id="texto-status-atualizacao">Dados atualizados</span>
+                    </div>
+                </div>
+                <div class="ultima-atualizacao">
+                    <span>⏱️</span>
+                    <span id="texto-ultima-atualizacao">Última atualização: Carregando...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay (não afeta layout) -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Carregando dados...</div>
+        </div>
+    </div>
+
+    <!-- Loading Compacto (para atualizações rápidas) -->
+    <div id="loading-compact" class="loading-compact">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Sincronizando...</div>
+    </div>
+
+    <!-- Modal -->
+    <div id="acoes-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <div class="modal-title" id="modal-title">Rifa</div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn btn-whatsapp" id="btn-whatsapp">
+                    <img src="/static/img/option3.png" alt="WhatsApp" style="width: 24px; height: 24px; filter: brightness(0) invert(1);">
+                    Enviar WhatsApp
+                </button>
+                <a class="modal-btn btn-link" id="btn-link" href="#" target="_blank">
+                    🔗 Abrir Link
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html> 

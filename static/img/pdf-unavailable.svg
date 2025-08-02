@@ -1,0 +1,22 @@
+<svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="54" height="54" rx="10" fill="#F5F5F5"/>
+  
+  <!-- PDF Icon (grayed out) -->
+  <g transform="translate(12, 8)" opacity="0.5">
+    <!-- Document base -->
+    <rect x="0" y="0" width="24" height="32" rx="2" fill="#9E9E9E"/>
+    
+    <!-- Document fold -->
+    <path d="M 0 0 L 8 0 L 8 8 L 0 8 Z" fill="#757575"/>
+    
+    <!-- PDF text -->
+    <text x="12" y="18" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white" text-anchor="middle">PDF</text>
+  </g>
+  
+  <!-- Not available indicator -->
+  <g transform="translate(42, 12)">
+    <circle cx="0" cy="0" r="6" fill="#FF5722"/>
+    <text x="0" y="2" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white" text-anchor="middle">!</text>
+  </g>
+</svg> 
