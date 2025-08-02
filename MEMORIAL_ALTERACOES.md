@@ -135,6 +135,73 @@ async function verificarStatusMonitorAndamento() {
 - ✅ **Dashboard atualizado:** Status agora respeita a diferença de tempo corretamente
 - ✅ **Logs funcionando:** Console mostra informações detalhadas do status
 
+---
+
+### **🔧 Correção de Configuração do Webhook Server (2025-08-02):**
+
+#### **Problema Identificado:**
+- ❌ Webhook server estava usando valores padrão para configuração do banco
+- ❌ Não respeitava as variáveis de ambiente do Coolify
+- ❌ Erro "Edição não encontrada" devido a configuração incorreta
+
+#### **Solução Aplicada:**
+- ✅ **Removidos valores padrão:** DB_CONFIG agora usa apenas `os.getenv()` sem fallbacks
+- ✅ **Configuração limpa:** Apenas variáveis de ambiente do Coolify são usadas
+- ✅ **Logs de debug:** Adicionados logs para verificar configuração do banco
+- ✅ **Endpoint de teste:** Criado `/test-db` para verificar conexão com banco
+
+#### **Mudanças Técnicas:**
+```python
+# webhook_server.py - Configuração corrigida
+DB_CONFIG = {
+    'host': os.getenv('DB_HOST'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'database': os.getenv('DB_NAME'),
+    'charset': os.getenv('DB_CHARSET', 'utf8mb4'),
+    'port': int(os.getenv('DB_PORT', '3306')),
+    'autocommit': True
+}
+```
+
+#### **Teste de Funcionamento:**
+- ✅ **Conexão com banco:** Webhook conecta corretamente ao banco remoto
+- ✅ **Edição encontrada:** Edição 6409 é localizada no banco
+- ✅ **Script executado:** relatorio_v2_vps.py é chamado corretamente
+- ⚠️ **PDF não gerado:** Falha por falta do wkhtmltopdf local (esperado)
+
+---
+
+### **🐛 Correção de Problema no Docker - Chrome não instalado (2025-08-02):**
+
+#### **Problema Identificado:**
+- ❌ **Chrome não encontrado no Docker:** `google-chrome: not found`
+- ❌ **ChromeDriver falha:** `Unable to obtain driver for chrome`
+- ❌ **Selenium não funciona:** Script falha ao tentar abrir navegador
+- ❌ **Webhook falha:** PDF não é gerado no ambiente Docker
+
+#### **Solução Aplicada:**
+- ✅ **Chrome instalado no Dockerfile:** Adicionada instalação do Google Chrome
+- ✅ **Repositório oficial:** Usado repositório oficial do Google Chrome
+- ✅ **Chave GPG:** Adicionada chave de assinatura do Google
+- ✅ **Limpeza de cache:** Removidos arquivos temporários para otimizar imagem
+
+#### **Mudanças Técnicas:**
+```dockerfile
+# Dockerfile - Instalação do Chrome adicionada
+# Instalar Google Chrome
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
+```
+
+#### **Próximos Passos:**
+1. **Redeploy no Coolify:** Com Dockerfile atualizado
+2. **Teste do webhook:** Verificar se Chrome funciona no Docker
+3. **Geração de PDF:** Confirmar que PDFs são gerados corretamente
+
 ## 📚 **Documentação Criada**
 
 ### **dados_webhook.md**
