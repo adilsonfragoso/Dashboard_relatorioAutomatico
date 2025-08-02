@@ -133,7 +133,7 @@ def obter_extracoes_recentes():
                             minuto = int(horario_parts[1]) if len(horario_parts) > 1 else 0
                             
                         fechamento = data_obj.replace(hour=hora, minute=minuto, second=0)
-                        limite_exibicao = fechamento + timedelta(minutes=30)
+                        limite_exibicao = fechamento + timedelta(minutes=120)
                         extracao['deve_exibir'] = agora <= limite_exibicao
                     except Exception as e:
                         print(f"Erro ao processar horário para edição {extracao['edicao'] if extracao and 'edicao' in extracao else ''}: {e}")
