@@ -83,7 +83,11 @@ def obter_extracoes_recentes():
         
         extracoes_raw = cursor.fetchall()
         extracoes_validas = []
-        agora = datetime.now()
+        
+        # Configurar timezone local (America/Sao_Paulo)
+        import pytz
+        tz_local = pytz.timezone('America/Sao_Paulo')
+        agora = datetime.now(tz_local)
         
         for extracao in extracoes_raw:
             andamento_raw = extracao['andamento'] if extracao and 'andamento' in extracao else None
@@ -133,7 +137,11 @@ def obter_extracoes_recentes():
                             minuto = int(horario_parts[1]) if len(horario_parts) > 1 else 0
                             
                         fechamento = data_obj.replace(hour=hora, minute=minuto, second=0)
-                        limite_exibicao = fechamento + timedelta(minutes=180)
+                        # Garantir que o fechamento tenha timezone info
+                        if fechamento.tzinfo is None:
+                            fechamento = tz_local.localize(fechamento)
+                        
+                        limite_exibicao = fechamento + timedelta(minutes=30)  # 30 minutos após fechamento
                         extracao['deve_exibir'] = agora <= limite_exibicao
                     except Exception as e:
                         print(f"Erro ao processar horário para edição {extracao['edicao'] if extracao and 'edicao' in extracao else ''}: {e}")
@@ -170,7 +178,7 @@ def obter_extracoes_recentes():
                     
                 extracoes_validas.append(extracao)
                 
-        data_atual = datetime.now()
+        data_atual = datetime.now(tz_local)
         dias_semana = {
             0: 'Segunda-feira',
             1: 'Terça-feira', 
