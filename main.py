@@ -433,7 +433,11 @@ def obter_status_monitor_andamento():
             }
 
         # Calcular diferença de tempo
-        agora = datetime.now()
+        # Configurar timezone local (America/Sao_Paulo)
+        import pytz
+        tz_local = pytz.timezone('America/Sao_Paulo')
+        
+        agora = datetime.now(tz_local)
         ultima_atualizacao = resultado['data_hora']
 
         # Se data_hora for string, converter para datetime
@@ -443,11 +447,11 @@ def obter_status_monitor_andamento():
         # Garantir que ambos os datetime tenham timezone info
         # Se ultima_atualizacao não tem timezone, assumir que é local
         if ultima_atualizacao.tzinfo is None:
-            ultima_atualizacao = ultima_atualizacao.replace(tzinfo=agora.astimezone().tzinfo)
+            ultima_atualizacao = tz_local.localize(ultima_atualizacao)
         
         # Se agora não tem timezone, adicionar timezone local
         if agora.tzinfo is None:
-            agora = agora.replace(tzinfo=ultima_atualizacao.tzinfo)
+            agora = tz_local.localize(agora)
 
         diferenca = agora - ultima_atualizacao
         minutos_desde_ultima = diferenca.total_seconds() / 60
