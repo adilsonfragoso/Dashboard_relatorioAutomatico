@@ -50,10 +50,11 @@ DB_CONFIG = {
     'database': os.getenv('DB_NAME'),
     'charset': os.getenv('DB_CHARSET', 'utf8mb4'),
     'port': int(os.getenv('DB_PORT', '3306')),
-    'connect_timeout': 10,
-    'read_timeout': 30,
-    'write_timeout': 30
+    'autocommit': True
 }
+
+# Log das configurações do banco (sem senha)
+logger.info(f"Configuração do banco: host={DB_CONFIG['host']}, user={DB_CONFIG['user']}, database={DB_CONFIG['database']}, port={DB_CONFIG['port']}")
 
 # Configurações do servidor
 WEBHOOK_PORT = int(os.getenv('WEBHOOK_PORT', 8011))
@@ -256,6 +257,9 @@ class WebhookHandler:
     async def check_edition_in_database(self, edition_number):
         """Verifica se a edição existe no banco e retorna informações"""
         try:
+            # Log das configurações do banco (sem senha)
+            logger.info(f"Tentando conectar ao banco: host={DB_CONFIG.get('host')}, user={DB_CONFIG.get('user')}, database={DB_CONFIG.get('database')}, port={DB_CONFIG.get('port')}")
+            
             # Conectar ao banco
             conn = mysql.connector.connect(**DB_CONFIG)
             cursor = conn.cursor(dictionary=True)
@@ -295,6 +299,7 @@ class WebhookHandler:
             return None
         except Exception as e:
             logger.error(f"Erro inesperado ao consultar banco: {e}")
+            logger.error(f"Tipo de erro: {type(e).__name__}")
             return None
         finally:
             if 'conn' in locals() and conn.is_connected():
@@ -467,6 +472,45 @@ async def webhook_endpoint(request: Request):
 async def test_endpoint():
     """Endpoint para testes"""
     return {"message": "Test endpoint working", "timestamp": datetime.now().isoformat()}
+
+@app.get("/test-db")
+async def test_database():
+    """Testa conexão com o banco de dados"""
+    try:
+        logger.info("Testando conexão com banco de dados...")
+        conn = mysql.connector.connect(**DB_CONFIG)
+        cursor = conn.cursor(dictionary=True)
+        
+        # Testar consulta simples
+        cursor.execute("SELECT COUNT(*) as total FROM extracoes_cadastro")
+        result = cursor.fetchone()
+        
+        cursor.close()
+        conn.close()
+        
+        return {
+            "success": True,
+            "message": "Conexão com banco OK",
+            "total_edicoes": result['total'],
+            "db_config": {
+                "host": DB_CONFIG['host'],
+                "user": DB_CONFIG['user'],
+                "database": DB_CONFIG['database'],
+                "port": DB_CONFIG['port']
+            }
+        }
+    except Exception as e:
+        logger.error(f"Erro ao testar banco: {e}")
+        return {
+            "success": False,
+            "error": str(e),
+            "db_config": {
+                "host": DB_CONFIG['host'],
+                "user": DB_CONFIG['user'],
+                "database": DB_CONFIG['database'],
+                "port": DB_CONFIG['port']
+            }
+        }
 
 if __name__ == "__main__":
     logger.info("🚀 Iniciando servidor webhook...")
