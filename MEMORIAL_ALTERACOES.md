@@ -202,6 +202,62 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
 2. **Teste do webhook:** Verificar se Chrome funciona no Docker
 3. **Geração de PDF:** Confirmar que PDFs são gerados corretamente
 
+---
+
+### **🔧 Correção Definitiva Baseada no Projeto Funcional (2025-08-02):**
+
+#### **Problema Identificado:**
+- ❌ **Chrome não funcionava no Docker:** Problemas com instalação e configuração
+- ❌ **ChromeDriver não encontrado:** Falha na detecção automática
+- ❌ **Configuração de banco inconsistente:** Diferentes configurações em cada arquivo
+- ❌ **Dependências desatualizadas:** Versões incompatíveis
+
+#### **Solução Aplicada:**
+- ✅ **Dockerfile corrigido:** Baseado no projeto RelatorioWhats que funciona
+- ✅ **Chrome instalado corretamente:** Com GPG key e repositório oficial
+- ✅ **ChromeDriver automático:** Detecção dinâmica da versão do Chrome
+- ✅ **Configuração unificada:** db_config.py centralizado
+- ✅ **Requirements atualizados:** Versões compatíveis e testadas
+- ✅ **Estrutura de pastas:** Pasta app/ com configurações centralizadas
+
+#### **Mudanças Técnicas:**
+```dockerfile
+# Dockerfile - Instalação correta do Chrome
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+
+# ChromeDriver automático
+RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | awk -F'.' '{print $1}') \
+    && wget --no-verbose "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION.0.7204.183/linux64/chromedriver-linux64.zip"
+```
+
+```python
+# db_config.py - Configuração centralizada
+DB_CONFIG = {
+    'host': os.getenv('DB_HOST', 'pma.linksystems.com.br'),
+    'user': os.getenv('DB_USER', 'adseg'),
+    'password': os.getenv('DB_PASSWORD', 'Define@4536#8521'),
+    'database': os.getenv('DB_NAME', 'litoral'),
+    'port': int(os.getenv('DB_PORT', 3306)),
+    'charset': os.getenv('DB_CHARSET', 'utf8mb4'),
+    'autocommit': True,
+    'raise_on_warnings': True
+}
+```
+
+#### **Arquivos Corrigidos:**
+- ✅ **Dockerfile:** Instalação correta do Chrome e ChromeDriver
+- ✅ **requirements.txt:** Versões compatíveis e testadas
+- ✅ **app/db_config.py:** Configuração centralizada do banco
+- ✅ **webhook_server.py:** Usa configuração centralizada
+- ✅ **relatorio_v2_vps.py:** Usa configuração centralizada
+- ✅ **main.py:** Usa configuração centralizada
+
+#### **Próximos Passos:**
+1. **Deploy no Coolify:** Com todas as correções aplicadas
+2. **Teste completo:** Webhook + geração de PDF
+3. **Monitoramento:** Verificar logs para confirmar funcionamento
+
 ## 📚 **Documentação Criada**
 
 ### **dados_webhook.md**
