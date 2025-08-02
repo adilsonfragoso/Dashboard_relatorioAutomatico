@@ -22,11 +22,15 @@ load_dotenv()
 
 # Configuração do banco de dados
 DB_CONFIG = {
-    'host': os.getenv('DB_HOST', 'pma.linksystems.com.br'),
-    'user': os.getenv('DB_USER', 'adseg'),
-    'password': os.getenv('DB_PASSWORD', 'Define@4536#8521'),
-    'database': os.getenv('DB_NAME', 'litoral'),
-    'charset': os.getenv('DB_CHARSET', 'utf8mb4')
+    'host': os.getenv('DB_HOST'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'database': os.getenv('DB_NAME'),
+    'charset': os.getenv('DB_CHARSET', 'utf8mb4'),
+    'port': int(os.getenv('DB_PORT', '3306')),
+    'connect_timeout': 10,
+    'read_timeout': 30,
+    'write_timeout': 30
 }
 
 app = FastAPI(title="Dashboard API", version="1.0.0")

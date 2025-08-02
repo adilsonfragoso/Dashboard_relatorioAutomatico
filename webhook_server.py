@@ -42,19 +42,18 @@ logger = logging.getLogger(__name__)
 # Configurações do Webhook (adaptado para outras aplicações)
 WEBHOOK_API_KEY = os.getenv('WEBHOOK_API_KEY', 'webhook_secret')
 
-# Importar configuração do banco
-try:
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'app')))
-    from db_config import DB_CONFIG
-except ImportError:
-    # Fallback para configuração direta se não conseguir importar
-    DB_CONFIG = {
-        'host': os.getenv('DB_HOST', 'pma.linksystems.com.br'),
-        'user': os.getenv('DB_USER', 'adseg'),
-        'password': os.getenv('DB_PASSWORD', 'Define@4536#8521'),
-        'database': os.getenv('DB_NAME', 'litoral'),
-        'port': int(os.getenv('DB_PORT', 3306))
-    }
+# Configuração do banco de dados
+DB_CONFIG = {
+    'host': os.getenv('DB_HOST'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'database': os.getenv('DB_NAME'),
+    'charset': os.getenv('DB_CHARSET', 'utf8mb4'),
+    'port': int(os.getenv('DB_PORT', '3306')),
+    'connect_timeout': 10,
+    'read_timeout': 30,
+    'write_timeout': 30
+}
 
 # Configurações do servidor
 WEBHOOK_PORT = int(os.getenv('WEBHOOK_PORT', 8011))

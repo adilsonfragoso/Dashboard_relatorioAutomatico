@@ -3,7 +3,7 @@
 ## 🎯 **Diretrizes Gerais**
 
 use sempre python 3.12.4
-
+prepare sempre o ambiente virtual para cada novo projeto.
 
 ### **📝 Gestão de Documentação**
 - ✅ **Evitar reescrita desnecessária** - Não reescrever arquivos `.md` inteiros para pequenas atualizações
@@ -52,6 +52,12 @@ use sempre python 3.12.4
 - **Problema:** Voltar a fazer coisas que já falharam mesmo sem ter mudado outros parametros
 - **Solução:** Memorial com histórico completo
 - **Resultado:** Não sair do problema
+
+
+### **Preparação para VSP**
+- **Inicialemnte:** Todo projeto deve ser preparado para rodar localmente no pc windows com ambientes adequados e mantendo os projeto mais parecido possível com o necessario para docker no coolify.
+- **Credencias:** nunca insira dados login e senha diretamente nos arquivos, prepare o .env para isso
+- **Após testes:** Depois de tudo testado, rodando certinho em local, quando solicitado deverá preparar tudo para rodar no docker para coolify. dados de acesso, senha e login serão configurados na seção "Production Enviroment Variables' do coolify
 
 ---
 
