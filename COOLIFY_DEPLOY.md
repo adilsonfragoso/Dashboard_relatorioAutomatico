@@ -7,8 +7,8 @@
 ```bash
 # Configurações do Banco de Dados
 DB_HOST=pma.linksystems.com.br
-DB_USER=adseg
-DB_PASSWORD=Define@4536#8521
+DB_USER=seu_usuario_aqui
+DB_PASSWORD=sua_senha_aqui
 DB_NAME=litoral
 DB_CHARSET=utf8mb4
 
@@ -78,8 +78,8 @@ uvicorn webhook_server:app --host 0.0.0.0 --port 8011
 
 ```
 DB_HOST=pma.linksystems.com.br
-DB_USER=adseg
-DB_PASSWORD=Define@4536#8521
+DB_USER=seu_usuario_aqui
+DB_PASSWORD=sua_senha_aqui
 DB_NAME=litoral
 DB_CHARSET=utf8mb4
 LOGIN_EMAIL=seu_email@exemplo.com

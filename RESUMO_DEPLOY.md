@@ -15,8 +15,8 @@
 ```bash
 # Banco de Dados
 DB_HOST=pma.linksystems.com.br
-DB_USER=adseg
-DB_PASSWORD=Define@4536#8521
+DB_USER=seu_usuario_aqui
+DB_PASSWORD=sua_senha_aqui
 DB_NAME=litoral
 DB_CHARSET=utf8mb4
 

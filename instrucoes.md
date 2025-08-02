@@ -4,6 +4,8 @@
 
 use sempre python 3.12.4
 prepare sempre o ambiente virtual para cada novo projeto.
+Durante produção ou quando preparar para vps, se tiver algum arquivo .md expondo senhas e dados confidenciais, coloque no .gitignore
+
 
 ### **📝 Gestão de Documentação**
 - ✅ **Evitar reescrita desnecessária** - Não reescrever arquivos `.md` inteiros para pequenas atualizações
@@ -57,7 +59,9 @@ prepare sempre o ambiente virtual para cada novo projeto.
 ### **Preparação para VSP**
 - **Inicialemnte:** Todo projeto deve ser preparado para rodar localmente no pc windows com ambientes adequados e mantendo os projeto mais parecido possível com o necessario para docker no coolify.
 - **Credencias:** nunca insira dados login e senha diretamente nos arquivos, prepare o .env para isso
-- **Após testes:** Depois de tudo testado, rodando certinho em local, quando solicitado deverá preparar tudo para rodar no docker para coolify. dados de acesso, senha e login serão configurados na seção "Production Enviroment Variables' do coolify
+- **Após testes:** Depois de tudo testado, rodando certinho em local, quando solicitado deverá preparar tudo para rodar no docker
+ para coolify. dados de acesso, senha e login serão configurados na seção "Production Enviroment Variables' do coolify. Verifique requirements se está atualizado de acordo com o projeto.
+
 
 ---
 
