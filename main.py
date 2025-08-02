@@ -442,8 +442,14 @@ def obter_status_heroku():
         diferenca = agora - ultima_atualizacao
         minutos_desde_ultima = diferenca.total_seconds() / 60
 
+        # Log para debug
+        logger.info(f"Status Heroku - Agora: {agora}, Última: {ultima_atualizacao}, Diferença: {minutos_desde_ultima:.1f} min, Ativo: {ativo}")
+
         # Servidor ativo se última atualização foi há 5 minutos ou menos
         ativo = minutos_desde_ultima <= 5
+        
+        # Log adicional para debug
+        logger.info(f"Status final - Ativo: {ativo}, Minutos: {minutos_desde_ultima:.1f}")
 
         return {
             "ativo": ativo,

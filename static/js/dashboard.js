@@ -11,8 +11,16 @@ document.addEventListener('DOMContentLoaded', function() {
     atualizarStatusRodape('sincronizando', 'Carregando dados iniciais...');
     
     // Verificar status da Heroku inicialmente
+    console.log('[INIT] 🚀 Inicializando dashboard...');
     setTimeout(() => {
+        console.log('[INIT] ⏰ Executando verificação inicial do status...');
         verificarStatusHeroku();
+        
+        // Teste adicional após 3 segundos
+        setTimeout(() => {
+            console.log('[TEST] 🔧 Teste adicional do status...');
+            verificarStatusHeroku();
+        }, 3000);
     }, 1000); // Aguardar 1 segundo para garantir que a página carregou
 
     carregarDados(true); // Primeira carga
@@ -97,24 +105,33 @@ async function verificarSeHouveMudancas() {
     }
 }
 
+// FUNÇÃO DE TESTE TEMPORÁRIA
+function testarStatus() {
+    console.log('[TEST] 🔧 Teste manual do status iniciado...');
+    verificarStatusHeroku();
+}
+
 // NOVA FUNÇÃO: Verificar status da Heroku baseado na tabela logs_andamento
 async function verificarStatusHeroku() {
     try {
-        const response = await fetch('/api/dashboard/status-heroku');
+        console.log('[HEROKU] 🔍 Verificando status do servidor...');
+        const response = await fetch('/api/dashboard/status-heroku?t=' + Date.now());
+        
         if (!response.ok) {
-            console.log('[HEROKU] Erro ao verificar status');
+            console.log('[HEROKU] ❌ Erro ao verificar status:', response.status);
             atualizarIndicadorServidor('offline', 'Erro ao verificar status');
             return;
         }
 
         const data = await response.json();
+        console.log('[HEROKU] 📊 Dados recebidos:', data);
 
         if (data.ativo) {
-            console.log(`[HEROKU] Status: Ativo (${data.minutos_desde_ultima} min atrás)`);
+            console.log(`[HEROKU] ✅ Status: Ativo (${data.minutos_desde_ultima} min atrás)`);
             atualizarIndicadorServidor('online', `Última atualização: ${data.ultima_atualizacao_formatada}`);
             atualizarUltimaAtualizacaoHeroku(data.ultima_atualizacao_formatada);
         } else {
-            console.log(`[HEROKU] Status: Inativo (${data.minutos_desde_ultima || 'N/A'} min atrás)`);
+            console.log(`[HEROKU] ❌ Status: Inativo (${data.minutos_desde_ultima || 'N/A'} min atrás)`);
             atualizarIndicadorServidor('offline', data.motivo || 'Sem atualizações recentes');
             if (data.ultima_atualizacao_formatada) {
                 atualizarUltimaAtualizacaoHeroku(data.ultima_atualizacao_formatada);
@@ -128,9 +145,16 @@ async function verificarStatusHeroku() {
 
 // NOVA FUNÇÃO: Atualizar indicador visual do servidor
 function atualizarIndicadorServidor(status, mensagem) {
+    console.log(`[HEROKU] 🎨 Atualizando indicador para: ${status} - ${mensagem}`);
+    
     const indicator = document.getElementById('status-agendador');
     const dot = indicator.querySelector('.status-dot');
     const text = indicator.querySelector('.status-text');
+
+    if (!indicator || !dot || !text) {
+        console.log('[HEROKU] ⚠️ Elementos do indicador não encontrados');
+        return;
+    }
 
     // Remover classes anteriores
     dot.classList.remove('status-online', 'status-offline');
@@ -141,11 +165,13 @@ function atualizarIndicadorServidor(status, mensagem) {
         indicator.classList.add('online');
         text.textContent = 'Servidor Ativo';
         indicator.title = mensagem;
+        console.log('[HEROKU] ✅ Indicador atualizado para ONLINE');
     } else {
         dot.classList.add('status-offline');
         indicator.classList.add('offline');
         text.textContent = 'Servidor Parado';
         indicator.title = mensagem;
+        console.log('[HEROKU] ❌ Indicador atualizado para OFFLINE');
     }
 }
 
