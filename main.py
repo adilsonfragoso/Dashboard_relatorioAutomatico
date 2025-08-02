@@ -467,8 +467,8 @@ def obter_status_monitor_andamento():
         diferenca = agora - ultima_atualizacao
         minutos_desde_ultima = diferenca.total_seconds() / 60
 
-        # Servidor ativo se última atualização foi há 5 minutos ou menos
-        ativo = minutos_desde_ultima <= 5
+        # Servidor ativo se última atualização foi há 6 minutos ou menos (5 + 1 minuto de tolerância)
+        ativo = minutos_desde_ultima <= 6
 
         # Log para debug com timezone info
         logger.info(f"Status MonitorAndamento - Agora: {agora} (tz: {agora.tzinfo}), Última: {ultima_atualizacao} (tz: {ultima_atualizacao.tzinfo}), Diferença: {minutos_desde_ultima:.1f} min, Ativo: {ativo}")
@@ -481,7 +481,8 @@ def obter_status_monitor_andamento():
             "ultima_atualizacao": ultima_atualizacao.isoformat(),
             "ultima_atualizacao_formatada": ultima_atualizacao.strftime('%H:%M:%S'),
             "minutos_desde_ultima": round(minutos_desde_ultima, 1),
-            "log_status": resultado['log_status']
+            "log_status": resultado['log_status'],
+            "timestamp_ultima_atualizacao": ultima_atualizacao.timestamp()
         }
 
     except Exception as e:

@@ -4,6 +4,8 @@ let modalEdicaoAtual = null;
 let rifasProcessando = new Set(); // Controla quais rifas estão sendo processadas
 let ultimaAtualizacaoDados = null; // Timestamp da última atualização dos dados
 let verificandoAtualizacoes = false; // Flag para evitar múltiplas verificações simultâneas
+let ultimoTimestampMonitor = null; // Timestamp da última atualização do monitor
+let verificandoMonitor = false; // Flag para evitar verificações simultâneas do monitor
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', function() {
@@ -51,10 +53,10 @@ function iniciarAtualizacaoAutomatica() {
         verificarSeHouveMudancas();
     }, 15000); // 15 segundos - mais frequente para detectar mudanças
 
-    // Verificação do status do monitorAndamento a cada 30 segundos
+    // Verificação do status do monitorAndamento a cada 10 segundos (mais responsivo)
     setInterval(() => {
         verificarStatusMonitorAndamento();
-    }, 30000); // 30 segundos
+    }, 10000); // 10 segundos
 
     // Atualização completa a cada 1 minuto (fallback)
     setInterval(() => {
@@ -113,7 +115,12 @@ function testarStatus() {
 
 // NOVA FUNÇÃO: Verificar status da Heroku baseado na tabela logs_andamento
 async function verificarStatusMonitorAndamento() {
+    if (verificandoMonitor) {
+        return; // Evitar verificações simultâneas
+    }
+
     try {
+        verificandoMonitor = true;
         console.log('[MONITOR] 🔍 Verificando status do servidor...');
         const response = await fetch('/api/dashboard/status-monitor-andamento?t=' + Date.now());
         
@@ -125,6 +132,23 @@ async function verificarStatusMonitorAndamento() {
 
         const data = await response.json();
         console.log('[MONITOR] 📊 Dados recebidos:', data);
+
+        // Verificar se houve mudança no timestamp da última atualização
+        const timestampAtual = data.timestamp_ultima_atualizacao;
+        const houveMudanca = ultimoTimestampMonitor !== null && ultimoTimestampMonitor !== timestampAtual;
+        
+        if (houveMudanca) {
+            console.log('[MONITOR] 🔄 Mudança detectada no monitor! Forçando atualização dos dados...');
+            console.log(`[MONITOR] Timestamp anterior: ${ultimoTimestampMonitor}, Atual: ${timestampAtual}`);
+            
+            // Forçar atualização imediata dos dados
+            atualizarStatusRodape('sincronizando', 'Sincronizando dados...');
+            await carregarDados(false, true); // Segundo parâmetro indica que houve mudanças
+            destacarAtualizacaoGeral();
+        }
+
+        // Atualizar timestamp para próxima verificação
+        ultimoTimestampMonitor = timestampAtual;
 
         if (data.ativo) {
             console.log(`[MONITOR] ✅ Status: Ativo (${data.minutos_desde_ultima} min atrás)`);
@@ -140,6 +164,8 @@ async function verificarStatusMonitorAndamento() {
     } catch (error) {
         console.log('[MONITOR] ⚠️ Erro ao verificar status:', error);
         atualizarIndicadorServidor('offline', 'Erro de conexão');
+    } finally {
+        verificandoMonitor = false;
     }
 }
 
