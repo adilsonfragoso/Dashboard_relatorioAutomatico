@@ -33,8 +33,7 @@ except ImportError:
         'database': os.getenv('DB_NAME', 'litoral'),
         'port': int(os.getenv('DB_PORT', 3306)),
         'charset': os.getenv('DB_CHARSET', 'utf8mb4'),
-        'autocommit': True,
-        'raise_on_warnings': True
+        'autocommit': True
     }
 
 app = FastAPI(title="Dashboard API", version="1.0.0")
