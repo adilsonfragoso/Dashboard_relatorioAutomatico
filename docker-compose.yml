@@ -5,16 +5,6 @@ services:
     build: .
     ports:
       - "8010:8010"
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_CHARSET=${DB_CHARSET}
-      - LOGIN_EMAIL=${LOGIN_EMAIL}
-      - LOGIN_PASSWORD=${LOGIN_PASSWORD}
-      - DOWNLOAD_PATH=/app/downloads
-      - WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf
     volumes:
       - ./downloads:/app/downloads
       - ./logs:/app/logs
@@ -25,17 +15,6 @@ services:
     build: .
     ports:
       - "8011:8011"
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_CHARSET=${DB_CHARSET}
-      - LOGIN_EMAIL=${LOGIN_EMAIL}
-      - LOGIN_PASSWORD=${LOGIN_PASSWORD}
-      - DOWNLOAD_PATH=/app/downloads
-      - WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf
-      - WEBHOOK_SECRET=${WEBHOOK_SECRET}
     volumes:
       - ./downloads:/app/downloads
       - ./logs:/app/logs

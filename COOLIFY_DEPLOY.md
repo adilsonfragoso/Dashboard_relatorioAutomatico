@@ -2,7 +2,7 @@
 
 ## 📋 **Pré-requisitos**
 
-### **1. Variáveis de Ambiente Necessárias:**
+### **1. Variáveis de Ambiente Necessárias (Configurar no Coolify):**
 
 ```bash
 # Configurações do Banco de Dados
@@ -45,16 +45,8 @@ Dockerfile
 # Comando de Inicialização
 uvicorn main:app --host 0.0.0.0 --port 8010
 
-# Variáveis de Ambiente
-DB_HOST=pma.linksystems.com.br
-DB_USER=adseg
-DB_PASSWORD=Define@4536#8521
-DB_NAME=litoral
-DB_CHARSET=utf8mb4
-LOGIN_EMAIL=seu_email@exemplo.com
-LOGIN_PASSWORD=sua_senha
-DOWNLOAD_PATH=/app/downloads
-WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf
+# ⚠️ IMPORTANTE: Configurar variáveis de ambiente na interface do Coolify
+# NÃO no docker-compose.yml
 ```
 
 ### **2. Criar Aplicação Webhook:**
@@ -72,7 +64,19 @@ Dockerfile
 # Comando de Inicialização
 uvicorn webhook_server:app --host 0.0.0.0 --port 8011
 
-# Variáveis de Ambiente
+# ⚠️ IMPORTANTE: Configurar variáveis de ambiente na interface do Coolify
+# NÃO no docker-compose.yml
+```
+
+### **3. Configurar Variáveis de Ambiente no Coolify:**
+
+**Para ambas as aplicações, na interface web do Coolify:**
+
+1. **Acesse a aplicação no Coolify**
+2. **Vá em "Environment Variables"**
+3. **Adicione cada variável:**
+
+```
 DB_HOST=pma.linksystems.com.br
 DB_USER=adseg
 DB_PASSWORD=Define@4536#8521
@@ -141,6 +145,7 @@ ls /app/downloads/
 3. **Volumes:** Compartilhar pasta downloads entre containers
 4. **Logs:** Monitorar logs para identificar problemas
 5. **Webhook:** Atualizar URL no script externo após deploy
+6. **⚠️ Variáveis de Ambiente:** Configurar na interface web do Coolify, NÃO no docker-compose.yml
 
 ## 🔄 **Atualização do Script Externo**
 

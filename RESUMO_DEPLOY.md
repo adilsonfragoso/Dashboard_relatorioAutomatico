@@ -8,10 +8,10 @@
 
 ### **2. Arquivos Docker Criados:**
 - ✅ **Dockerfile:** Baseado em Python 3.12.4 com wkhtmltopdf
-- ✅ **docker-compose.yml:** Serviços separados para Dashboard e Webhook
+- ✅ **docker-compose.yml:** Serviços separados para Dashboard e Webhook (sem variáveis de ambiente)
 - ✅ **.dockerignore:** Otimização do build
 
-### **3. Variáveis de Ambiente Configuradas:**
+### **3. Variáveis de Ambiente (Configurar no Coolify):**
 ```bash
 # Banco de Dados
 DB_HOST=pma.linksystems.com.br
@@ -63,9 +63,10 @@ Comando: uvicorn webhook_server:app --host 0.0.0.0 --port 8011
 - `/app/downloads` → `./downloads`
 - `/app/logs` → `./logs`
 
-### **4. Configurar Variáveis de Ambiente:**
-- Todas as variáveis listadas acima
-- **IMPORTANTE:** Nunca commitar credenciais no Git
+### **4. ⚠️ IMPORTANTE: Configurar Variáveis de Ambiente no Coolify:**
+- **NÃO** no docker-compose.yml
+- **SIM** na interface web do Coolify
+- Acesse cada aplicação → Environment Variables → Adicione as variáveis
 
 ## 🔗 **URLs Finais**
 
@@ -105,13 +106,14 @@ ls /app/downloads/
 3. **Volumes:** Compartilhar pasta downloads entre containers
 4. **Logs:** Monitorar para identificar problemas
 5. **Webhook:** Atualizar URL no script externo após deploy
+6. **⚠️ Variáveis de Ambiente:** Configurar na interface web do Coolify, NÃO no docker-compose.yml
 
 ## 📚 **Arquivos de Referência**
 
 - **COOLIFY_DEPLOY.md:** Instruções detalhadas
 - **dados_webhook.md:** Documentação do webhook
 - **MEMORIAL_ALTERACOES.md:** Histórico completo
-- **docker-compose.yml:** Para testes locais
+- **docker-compose.yml:** Para testes locais (sem variáveis de ambiente)
 
 ---
 
