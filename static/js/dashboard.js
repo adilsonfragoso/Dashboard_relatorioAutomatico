@@ -9,8 +9,7 @@ let verificandoMonitor = false; // Flag para evitar verificações simultâneas 
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar rodapé
-    atualizarStatusRodape('sincronizando', 'Carregando dados iniciais...');
+
     
     // Verificar status do monitorAndamento inicialmente
     console.log('[INIT] 🚀 Inicializando dashboard...');
@@ -89,7 +88,6 @@ async function verificarSeHouveMudancas() {
         
         if (mudancaDetectada) {
             console.log('[SYNC] 🔄 Mudanças detectadas! Atualizando dashboard...');
-            atualizarStatusRodape('sincronizando', 'Sincronizando dados...');
             
             // Atualizar dados imediatamente (sem loading overlay)
             await carregarDados(false, true); // Segundo parâmetro indica que houve mudanças
@@ -107,11 +105,7 @@ async function verificarSeHouveMudancas() {
     }
 }
 
-// FUNÇÃO DE TESTE TEMPORÁRIA
-function testarStatus() {
-    console.log('[TEST] 🔧 Teste manual do status iniciado...');
-    verificarStatusMonitorAndamento();
-}
+
 
 // NOVA FUNÇÃO: Verificar status da Heroku baseado na tabela logs_andamento
 async function verificarStatusMonitorAndamento() {
@@ -142,7 +136,6 @@ async function verificarStatusMonitorAndamento() {
             console.log(`[MONITOR] Timestamp anterior: ${ultimoTimestampMonitor}, Atual: ${timestampAtual}`);
             
             // Forçar atualização imediata dos dados
-            atualizarStatusRodape('sincronizando', 'Sincronizando dados...');
             await carregarDados(false, true); // Segundo parâmetro indica que houve mudanças
             destacarAtualizacaoGeral();
         }
@@ -306,7 +299,6 @@ async function carregarDados(isFirstLoad = false, houveMudancas = false) {
         // 3. Houve mudanças reais nos dados (dadosAtuaisMudaram)
         if (isFirstLoad || houveMudancas || dadosAtuaisMudaram) {
             // Atualização da Heroku será feita pelo timer separado
-            atualizarStatusRodape('atualizado', 'Dados atualizados');
             console.log('[SYNC] Rodapé atualizado - houve mudanças nos dados');
         } else {
             // Se não houve mudanças, apenas manter o status atual
@@ -513,11 +505,7 @@ async function enviarWhatsApp(edicao) {
         const rifa = rifasData.find(r => r.edicao == edicao);
         const statusAnterior = rifa ? rifa.status_envio_link || 'pendente' : 'pendente';
         
-        if (statusAnterior === 'enviado') {
-            atualizarStatusRodape('sincronizando', `Reenviando link da edição ${edicao}...`);
-        } else {
-            atualizarStatusRodape('sincronizando', `Enviando link da edição ${edicao}...`);
-        }
+
         
         document.getElementById('acoes-modal').style.display = 'none';
         
@@ -528,12 +516,6 @@ async function enviarWhatsApp(edicao) {
         const data = await response.json();
 
         if (response.ok) {
-            if (statusAnterior === 'enviado') {
-                atualizarStatusRodape('atualizado', `Link reenviado para edição ${edicao}!`);
-            } else {
-                atualizarStatusRodape('atualizado', `Link enviado para edição ${edicao}!`);
-            }
-            
             // Atualizar dados após envio para refletir mudança no status
             setTimeout(() => {
                 carregarDados();
@@ -562,7 +544,6 @@ async function baixarPDF(edicao) {
             // PDF existe, fazer download
             console.log(`[PDF] Iniciando download via window.open para edição ${edicao}`);
             window.open(`/api/dashboard/download-pdf/${edicao}`, '_blank');
-            atualizarStatusRodape('atualizado', `📄 Download da edição ${edicao} iniciado!`);
         } else {
             // PDF não existe - informar que será gerado pelo script externo
             mostrarErro(`PDF da edição ${edicao} ainda não foi gerado. Aguarde o processamento automático.`);
@@ -626,29 +607,7 @@ function mostrarErro(mensagem) {
 }
 
 // Atualizar status no rodapé
-function atualizarStatusRodape(tipo, mensagem) {
-    const statusDiv = document.getElementById('status-atualizacao');
-    const textoStatus = document.getElementById('texto-status-atualizacao');
-    
-    // Remover classes anteriores
-    statusDiv.classList.remove('status-atualizado', 'status-sincronizando', 'status-offline');
-    
-    if (tipo === 'sincronizando') {
-        statusDiv.classList.add('status-sincronizando');
-        statusDiv.innerHTML = `<span>⏳</span><span>${mensagem}</span>`;
-    } else if (tipo === 'offline') {
-        statusDiv.classList.add('status-offline');
-        statusDiv.innerHTML = `<span>⚠️</span><span>${mensagem}</span>`;
-    } else {
-        statusDiv.classList.add('status-atualizado');
-        statusDiv.innerHTML = `<span>✅</span><span>${mensagem}</span>`;
-        
-        // Voltar ao estado normal após 3 segundos
-        setTimeout(() => {
-            statusDiv.innerHTML = `<span>✅</span><span>Dados atualizados</span>`;
-        }, 3000);
-    }
-}
+
 
 // Nova função para renderizar o ícone PDF com estado de processamento
 function renderizarIconePDF(extracao) {
